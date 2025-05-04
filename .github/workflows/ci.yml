@@ -1,0 +1,44 @@
+name: test  # GitHub Actions の表示名
+
+on: [push, pull_request]  # push または PR 時に発動
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Ubuntu VM を使う
+
+    steps:
+      - uses: actions/checkout@v4  # ソースコード取得
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'  # 使用するPythonバージョン
+
+      - name: Cache Poetry virtualenvs  # ← ここでキャッシュ復元
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root
+
+      - name: Run tests
+        run: poetry run pytest --cov=temp_repo --cov-report=xml      
+
+      - name: Upload coverage artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: true

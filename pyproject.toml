@@ -1,0 +1,41 @@
+[project]
+name = "temp-repo"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "yamanora",email = "yamanora125@gmail.com"}
+]
+
+packages = [
+    { include = "temp_repo" }
+]
+
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.5"
+pytest-cov = "^6.1.1"
+pre-commit = "^4.2.0"
+ruff = "^0.11.8"
+
+[tool.poetry.scripts]
+temp-repo = "temp_repo.cli:main"
+
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "I", "B", "UP", "SIM"]
+fix = true
+
+[tool.coverage.run]
+source = ["temp_repo"]
+
+[tool.coverage.report]
+omit = ["tests/*"]
