@@ -28,8 +28,8 @@ jobs:
         run: poetry install --with dev --no-interaction --no-root
 
       - name: Run tests
-        run: poetry run pytest --cov=autoscropts_csv --cov-report=xml      
-
+        run: poetry run pytest --cov=autoscripts_csv --cov-report=xml:coverage.xml
+       
       - name: Upload coverage artifact
         if: success()
         uses: actions/upload-artifact@v4
