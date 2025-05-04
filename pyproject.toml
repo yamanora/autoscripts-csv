@@ -1,5 +1,5 @@
 [project]
-name = "temp-repo"
+name = "autoscripts-csv"
 version = "0.1.0"
 description = ""
 authors = [
@@ -7,7 +7,7 @@ authors = [
 ]
 
 packages = [
-    { include = "temp_repo" }
+    { include = "autoscripts_csv" }
 ]
 
 readme = "README.md"
@@ -27,7 +27,7 @@ pre-commit = "^4.2.0"
 ruff = "^0.11.8"
 
 [tool.poetry.scripts]
-temp-repo = "temp_repo.cli:main"
+autoscripts-csv = "autoscripts_csv.cli:main"
 
 [tool.ruff]
 line-length = 88
@@ -35,7 +35,7 @@ select = ["E", "F", "I", "B", "UP", "SIM"]
 fix = true
 
 [tool.coverage.run]
-source = ["temp_repo"]
+source = ["autoscripts_csv"]
 
 [tool.coverage.report]
 omit = ["tests/*"]
