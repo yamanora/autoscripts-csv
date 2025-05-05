@@ -1,10 +1,13 @@
 # autoscripts-csv
 
 ![CI](https://github.com/yamanora/autoscripts-csv/actions/workflows/ci.yml/badge.svg)  
-[![codecov](https://codecov.io/gh/yamanora/autoscripts-csv/branch/main/graph/badge.svg)](https://codecov.io/gh/yamanora/autoscripts_csv)
+[![codecov](https://codecov.io/gh/yamanora/autoscripts-csv/branch/main/graph/badge.svg)](https://codecov.io/gh/yamanora/autoscripts-csv)
 
-開発用Pythonテンプレート  
-Poetry/pre-commit/pytest(+coverage) /CI
+簡易的なCSVフィルター・整形ツール
+Python + pandas によるコマンドラインツールです。
+※本ツールは現在開発中です（一部機能は今後拡張予定）
+
+Poetry / pre-commit / pytest(+coverage) / CI に対応。
 
 ---
 
@@ -19,10 +22,46 @@ pre-commit install
 
 ## 使い方（例）
 
-CLI モジュールが定義されている場合：
+```bash
+poetry run autoscripts-csv -i <入力ファイル> [--f <列=値>] [--d <列名1,列名2,...>]
+```
+
+### 引数一覧
+
+| 引数 | 必須 | 内容 | 例 |
+|------|------|------|----|
+| `-i`, `--input` | ✅ | 入力CSVファイル名 | `-i input.csv` |
+| `--f`, `--filter` | 任意 | 指定列が特定の値と一致する行のみを抽出 | `--f 担当=佐藤` |
+| `--d`, `--drop` | 任意 | 指定した列名を削除（カンマ区切りで複数可） | `--d 備考,メモ` |
+
+※ `--filter` の複数指定や正規表現、AND/OR 条件などは未対応（今後拡張予定）  
+※ `--drop` は存在しない列を指定してもスキップされます
+
+---
+
+## 入出力例
+
+### 入力CSV（`input.csv`）
+
+```csv
+担当,実施,備考
+佐藤,◯,
+田中,◯,
+佐藤,☓,
+```
+
+### 実行例
 
 ```bash
-poetry run autoscripts-csv --help
+poetry run autoscripts-csv -i input.csv --f 担当=佐藤 --d 備考
+```
+
+### 出力結果（標準出力）
+
+```
+  担当 実施
+  佐藤 ◯
+  佐藤 ☓
 ```
 
 ---
@@ -32,14 +71,15 @@ poetry run autoscripts-csv --help
 ```
 autoscripts-csv/
 ├── src/
-│   └── autoscripts_csv/          # パッケージ本体
+│   └── autoscripts_csv/      # パッケージ本体
 │       ├── __init__.py
-│       └── cli.py          # CLIのエントリーポイント
-├── tests/                  # 単体テスト
-│   └── test_dummy.py
+│       ├── cli.py            # CLIエントリーポイント
+│       └── core.py           # 処理ロジック
+├── tests/                    # 単体テスト
+│   └── test_core.py
 ├── .github/
 │   └── workflows/
-│       └── ci.yml          # CI設定
+│       └── ci.yml            # CI設定
 ├── pyproject.toml
 ├── README.md
 └── ...
@@ -47,14 +87,48 @@ autoscripts-csv/
 
 ---
 
-処理構成のイメージ（Mermaid）：
+## 処理構成（Mermaidイメージ）
 
 ```mermaid
 flowchart TD
     A[cli.py] --> B[argparseで引数解析]
-    B --> C[handler関数に分岐]
-    C --> D1[format_csv]
-    C --> D2[summarize_csv]
-    D1 --> E1[出力ファイル保存]
-    D2 --> E2[出力ファイル保存]
+    B --> C1{--filter あり?}
+    C1 -- Yes --> D1[core.filter_dataframe]
+    C1 -- No --> D2[スキップ]
+
+    D1 --> C2{--drop あり?}
+    D2 --> C2
+
+    C2 -- Yes --> E1[core.drop_column]
+    C2 -- No --> E2[スキップ]
+
+    E1 --> F[整形後DataFrameを出力]
+    E2 --> F
 ```
+
+---
+
+## テスト・カバレッジ
+
+```bash
+poetry run pytest --cov
+```
+
+| ファイル | カバレッジ |
+|----------|------------|
+| `core.py` | ✅ 100% |
+| `cli.py` | ⚠️ テスト未実施（今後対応予定） |
+
+---
+
+## 今後の予定
+
+- 出力ファイル指定（`--output`）
+- 複数フィルター条件対応
+- 列順変更／サマリ出力対応（PoC向け提出物用途）
+
+---
+
+## ライセンス
+
+MIT
