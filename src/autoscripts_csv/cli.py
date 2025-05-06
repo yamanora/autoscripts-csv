@@ -17,6 +17,7 @@ def main():
         "--f", "--filter", required=False, help="フィルターをかける項目名 例:担当=佐藤"
     )
     parser.add_argument("--d", "--drop", required=False, help="消去する列名 例:備考")
+    parser.add_argument("--n", "--notify", required=False, help="Slackに送る通知文")
 
     args = parser.parse_args()
     df = pd.read_csv(args.input)
@@ -33,6 +34,9 @@ def main():
     if args.d:
         drop_cols = args.d.split(",")
         df = core.drop_column(df, drop_cols)
+
+    if args.n:
+        core.notify_slack(args.n)
 
     print(df.to_string(index=False))
 
