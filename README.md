@@ -14,8 +14,11 @@ Poetry / pre-commit / pytest(+coverage) / CI に対応。
 ## セットアップ手順
 
 ```bash
+# 仮想環境を構築（dev依存も含めてインストール）
 poetry install --with dev
-pre-commit install
+
+# pre-commitを仮想環境から実行・インストール
+poetry run pre-commit install
 ```
 
 ---
