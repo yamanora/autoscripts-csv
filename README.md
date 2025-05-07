@@ -26,7 +26,7 @@ poetry run pre-commit install
 ## 使い方（例）
 
 ```bash
-poetry run autoscripts-csv -i <入力ファイル> [--f <列=値>] [--d <列名1,列名2,...>] [--n <Slackメッセージ>]
+poetry run autoscripts-csv -i <入力ファイル> [-o <出力ファイル>] [-f <列=値>] [-d <列名1,列名2,...>] [-n <Slackメッセージ>]
 ```
 
 ### 引数一覧
@@ -34,9 +34,10 @@ poetry run autoscripts-csv -i <入力ファイル> [--f <列=値>] [--d <列名1
 | 引数 | 必須 | 内容 | 例 |
 |------|------|------|----|
 | `-i`, `--input` | ✅ | 入力CSVファイル名 | `-i input.csv` |
-| `--f`, `--filter` | 任意 | 指定列が特定の値と一致する行を抽出 | `--f 担当=佐藤` |
-| `--d`, `--drop` | 任意 | 指定した列名を削除（カンマ区切りで複数可） | `--d 備考,メモ` |
-| `--n`, `--notify` | 任意 | Slackにメッセージを通知 | `--n "通知成功"` |
+| `-o`, `--output`  | 任意 | 出力ファイル名（省略時は標準出力） | `-o output.csv` |
+| `-f`, `--filter` | 任意 | 指定列が特定の値と一致する行を抽出 | `-f 担当=佐藤` |
+| `-d`, `--drop` | 任意 | 指定した列名を削除（カンマ区切りで複数可） | `-d 備考,メモ` |
+| `-n`, `--notify` | 任意 | Slackにメッセージを通知 | `-n "通知成功"` |
 
 ※ `--filter` の複数指定や正規表現、AND/OR 条件などは未対応（今後拡張予定）  
 ※ `--drop` は存在しない列を指定してもスキップされます
@@ -57,15 +58,15 @@ poetry run autoscripts-csv -i <入力ファイル> [--f <列=値>] [--d <列名1
 ### 実行例
 
 ```bash
-poetry run autoscripts-csv -i input.csv --f 担当=佐藤 --d 備考 --n "通知成功"
+poetry run autoscripts-csv -i input.csv -o output.csv -f 担当=佐藤 -d 備考 -n "通知成功"
 ```
 
-### 出力結果（標準出力）
+### 出力結果（標準出力 or output.csv）
 
-```
-  担当 実施
-  佐藤 ◯
-  佐藤 ☓
+```csv
+担当,実施
+佐藤,◯
+佐藤,☓
 ```
 
 ---
@@ -119,12 +120,16 @@ flowchart TD
     C2 -- Yes --> E1[core.drop_column]
     C2 -- No --> E2[スキップ]
 
-    E1 --> F[整形後DataFrameを出力]
+    E1 --> F{--output あり?}
     E2 --> F
 
-    F --> G{--notify あり?}
-    G -- Yes --> H[core.notify_slack]
-    G -- No --> I[通知なしで終了]
+    F -- Yes --> G[ファイルに保存]
+    F -- No  --> H[標準出力]
+
+    H --> I{--notify あり?}
+    G --> I
+    I -- Yes --> J[core.notify_slack]
+    I -- No --> K[通知なしで終了]
 ```
 
 ---
@@ -146,7 +151,6 @@ poetry run pytest --cov
 
 ## 今後の予定
 
-- 出力ファイル指定（`--output`）
 - 複数フィルター条件対応
 - 列順変更／サマリ出力対応
 
