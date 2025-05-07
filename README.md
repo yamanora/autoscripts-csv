@@ -26,7 +26,7 @@ poetry run pre-commit install
 ## 使い方（例）
 
 ```bash
-poetry run autoscripts-csv -i <入力ファイル> [--f <列=値>] [--d <列名1,列名2,...>]
+poetry run autoscripts-csv -i <入力ファイル> [--f <列=値>] [--d <列名1,列名2,...>] [--n <Slackメッセージ>]
 ```
 
 ### 引数一覧
@@ -34,8 +34,9 @@ poetry run autoscripts-csv -i <入力ファイル> [--f <列=値>] [--d <列名1
 | 引数 | 必須 | 内容 | 例 |
 |------|------|------|----|
 | `-i`, `--input` | ✅ | 入力CSVファイル名 | `-i input.csv` |
-| `--f`, `--filter` | 任意 | 指定列が特定の値と一致する行のみを抽出 | `--f 担当=佐藤` |
+| `--f`, `--filter` | 任意 | 指定列が特定の値と一致する行を抽出 | `--f 担当=佐藤` |
 | `--d`, `--drop` | 任意 | 指定した列名を削除（カンマ区切りで複数可） | `--d 備考,メモ` |
+| `--n`, `--notify` | 任意 | Slackにメッセージを通知 | `--n "通知成功"` |
 
 ※ `--filter` の複数指定や正規表現、AND/OR 条件などは未対応（今後拡張予定）  
 ※ `--drop` は存在しない列を指定してもスキップされます
@@ -56,7 +57,7 @@ poetry run autoscripts-csv -i <入力ファイル> [--f <列=値>] [--d <列名1
 ### 実行例
 
 ```bash
-poetry run autoscripts-csv -i input.csv --f 担当=佐藤 --d 備考
+poetry run autoscripts-csv -i input.csv --f 担当=佐藤 --d 備考 --n "通知成功"
 ```
 
 ### 出力結果（標準出力）
@@ -69,15 +70,28 @@ poetry run autoscripts-csv -i input.csv --f 担当=佐藤 --d 備考
 
 ---
 
+## 環境変数（Slack通知用）
+
+もしSlack通知が必要であれば、プロジェクトルートに `.env` を作成し以下を記述してください：
+
+```
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+```
+
+---
+
 ## ファイル構成
 
 ```
 autoscripts-csv/
 ├── src/
-│   └── autoscripts_csv/      # パッケージ本体
+│   └── autoscripts_csv/        # パッケージ本体
 │       ├── __init__.py
-│       ├── cli.py            # CLIエントリーポイント
-│       └── core.py           # 処理ロジック
+│       ├── cli.py              # CLIエントリーポイント
+│       └── core/               # 処理ロジックモジュール
+│           ├── filter.py       # 行フィルター処理
+│           ├── drop.py         # 列削除処理
+│           └── notify.py       # Slack通知処理
 ├── tests/                    # 単体テスト
 │   └── test_core.py
 ├── .github/
@@ -107,6 +121,10 @@ flowchart TD
 
     E1 --> F[整形後DataFrameを出力]
     E2 --> F
+
+    F --> G{--notify あり?}
+    G -- Yes --> H[core.notify_slack]
+    G -- No --> I[通知なしで終了]
 ```
 
 ---
@@ -119,8 +137,10 @@ poetry run pytest --cov
 
 | ファイル | カバレッジ |
 |----------|------------|
-| `core.py` | ✅ 100% |
-| `cli.py` | ⚠️ テスト未実施（今後対応予定） |
+| `core/filter.py` | ✅ 100% |
+| `core/drop.py`   | ✅ 100% |
+| `core/notify.py` | ✅ 100% |
+| `cli.py`         | ⚠️ テスト未実施（今後対応予定） |
 
 ---
 
@@ -128,7 +148,7 @@ poetry run pytest --cov
 
 - 出力ファイル指定（`--output`）
 - 複数フィルター条件対応
-- 列順変更／サマリ出力対応（PoC向け提出物用途）
+- 列順変更／サマリ出力対応
 
 ---
 
