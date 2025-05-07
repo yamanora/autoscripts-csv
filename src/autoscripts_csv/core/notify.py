@@ -19,6 +19,5 @@ def notify_slack(message: str) -> None:
     try:
         response = requests.post(webhook_url, json=payload)
         response.raise_for_status()
-        print(f"response result:{response.status_code}")
     except requests.RequestException as e:
         print(f"[Slack通知失敗]{e}")

@@ -28,7 +28,6 @@ def main():
         else:
             parts = args.f.split("=", 1)
             col, val = parts
-            print(f"{col}は{val}です")
             df = core.filter_dataframe(df, col, val)
 
     if args.d:
