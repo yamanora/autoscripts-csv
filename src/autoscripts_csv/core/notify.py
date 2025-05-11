@@ -1,5 +1,3 @@
-# src/autoscripts_csv/notify.py
-
 import os
 
 import requests

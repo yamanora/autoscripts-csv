@@ -1,10 +1,8 @@
-# autoscripts-csv/cli.py
-
 import argparse
 
 import pandas as pd
 
-from autoscripts_csv import core
+from autoscripts_csv.core import drop, filter, notify
 
 
 def main():
@@ -29,14 +27,14 @@ def main():
         else:
             parts = args.filter.split("=", 1)
             col, val = parts
-            df = core.filter_dataframe(df, col, val)
+            df = filter.filter_dataframe(df, col, val)
 
     if args.drop:
         drop_cols = args.drop.split(",")
-        df = core.drop_column(df, drop_cols)
+        df = drop.drop_column(df, drop_cols)
 
     if args.notify:
-        core.notify_slack(args.notify)
+        notify.notify_slack(args.notify)
 
     if args.output:
         df.to_csv(args.output, index=False)
