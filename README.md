@@ -3,11 +3,15 @@
 ![CI](https://github.com/yamanora/autoscripts-csv/actions/workflows/ci.yml/badge.svg)  
 [![codecov](https://codecov.io/gh/yamanora/autoscripts-csv/branch/main/graph/badge.svg)](https://codecov.io/gh/yamanora/autoscripts-csv)
 
-簡易的なCSVフィルター・整形ツール
-Python + pandas によるコマンドラインツールです。
+簡易的なCSVフィルター・整形ツール  
+Python + pandas によるコマンドラインツールです。  
 ※本ツールは現在開発中です（一部機能は今後拡張予定）
 
 Poetry / pre-commit / pytest(+coverage) / CI に対応。
+
+## 本リポジトリについて
+- 本リポジトリは学習用であり、一部コードはChatGPTや技術記事を参考にしています。  
+- 現在は構成理解を進めつつ、段階的に再構成・自力実装への移行を進めています。
 
 ---
 
@@ -81,30 +85,6 @@ SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
 
 ---
 
-## ファイル構成
-
-```
-autoscripts-csv/
-├── src/
-│   └── autoscripts_csv/        # パッケージ本体
-│       ├── __init__.py
-│       ├── cli.py              # CLIエントリーポイント
-│       └── core/               # 処理ロジックモジュール
-│           ├── filter.py       # 行フィルター処理
-│           ├── drop.py         # 列削除処理
-│           └── notify.py       # Slack通知処理
-├── tests/                    # 単体テスト
-│   └── test_core.py
-├── .github/
-│   └── workflows/
-│       └── ci.yml            # CI設定
-├── pyproject.toml
-├── README.md
-└── ...
-```
-
----
-
 ## 処理構成（Mermaidイメージ）
 
 ```mermaid
@@ -139,13 +119,7 @@ flowchart TD
 ```bash
 poetry run pytest --cov
 ```
-
-| ファイル | カバレッジ |
-|----------|------------|
-| `core/filter.py` | ✅ 100% |
-| `core/drop.py`   | ✅ 100% |
-| `core/notify.py` | ✅ 100% |
-| `cli.py`         | ⚠️ テスト未実施（今後対応予定） |
+※ CLI 含め主要機能はすべてテスト済み（現在のカバレッジは約94%）
 
 ---
 
