@@ -1,4 +1,9 @@
 # CHANGELOG
+## [0.2.1] - 2025-05-17
+
+### Added
+- `poc/micro01_http/` を追加（GET→title抽出→Slack通知のPoCスクリプト）
+  - 任意のURLにアクセスし、JSONから `title` を抽出してSlackに通知
 
 ## [0.2.0] - 2025-05-15
 ### Added
