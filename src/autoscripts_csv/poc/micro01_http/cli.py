@@ -14,9 +14,14 @@ def main():
 
     data = fetch_data(args.url)
 
-    message = extract_info(data)
+    title = extract_info(data)
+
+    message = (
+        f"新しいタスク取得:\n{title}\nID: {data.get('id', '不明')}\nURL: {args.url}"
+    )
+
     print(message)
-    post_to_slack("通知成功")
+    post_to_slack(message)
 
 
 if __name__ == "__main__":

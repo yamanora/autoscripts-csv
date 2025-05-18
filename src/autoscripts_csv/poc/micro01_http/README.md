@@ -15,14 +15,13 @@ poetry run python cli.py --url https://jsonplaceholder.typicode.com/todos/1
 ## 出力例
 
 ```
-新しいタスク: delectus aut autem
+新しいタスク取得:
+delectus aut autem
+ID: 1
+URL: https://jsonplaceholder.typicode.com/todos/1
 ```
 
-Slackには以下のように通知されます：
-
-```
-新しいタスク: delectus aut autem
-```
+Slackにも同様の内容で通知できます。
 
 ---
 

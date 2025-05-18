@@ -17,7 +17,7 @@ def fetch_data(url: str) -> dict:
 
 
 def extract_info(data: dict) -> str:
-    return f"新しいタスク: {data.get('title', 'タイトルなし')}"
+    return data.get("title", "タイトル取得失敗")
 
 
 def post_to_slack(message: str) -> None:

@@ -1,4 +1,12 @@
 # CHANGELOG
+## [0.2.2] - 2025-05-18
+
+### Added
+- `poc/micro01_http/http_to_clack_py` のテストを追加
+
+### Changed
+- Slackへの通知内容を変更
+
 ## [0.2.1] - 2025-05-17
 
 ### Added
