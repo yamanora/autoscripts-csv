@@ -1,6 +1,7 @@
 import argparse
 
-from http_to_slack import extract_info, fetch_data, post_to_slack
+from autoscripts_csv.poc.common.notify import post_to_slack
+from autoscripts_csv.poc.micro01_http.http_client import extract_info, fetch_data
 
 
 def main():
