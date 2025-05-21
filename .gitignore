@@ -177,5 +177,4 @@ cython_debug/
 output.csv
 
 # PoC2
-**/sample.pdf
 **/generate_sample_pdf.py
