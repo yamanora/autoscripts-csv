@@ -1,6 +1,6 @@
 [project]
 name = "autoscripts-csv"
-version = "0.1.0"
+version = "0.2.3"
 description = ""
 authors = [
     {name = "yamanora",email = "yamanora125@gmail.com"}
