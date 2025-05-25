@@ -6,20 +6,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def fetch_data(url: str) -> dict:
-    try:
-        response = requests.get(url, timeout=5)
-        response.raise_for_status()
-        return response.json()
-    except requests.RequestException as e:
-        print(f"[ERROR] リクエスト失敗: {e}")
-        raise
-
-
-def extract_info(data: dict) -> str:
-    return data.get("title", "タイトル取得失敗")
-
-
 def post_to_slack(message: str) -> None:
     webhook_url = os.getenv("SLACK_WEBHOOK_URL")
 
