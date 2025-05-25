@@ -175,3 +175,7 @@ cython_debug/
 
 # autoscripts-csv
 output.csv
+output.txt
+
+# PoC2
+**/generate_sample_pdf.py
